@@ -38,8 +38,8 @@ enum Gamemode {
 };
 
 Gamemode current_gamemode;
-int hot_button;
-bool enemy_is_ai;
+int hot_button = 0;
+bool enemy_is_ai_easy, enemy_is_ai_hard;
 
 internal void simulate_game(Input* input, float dt) {
 	draw_rect(0, 0, arena_half_size_x, arena_half_size_y, 0x000000);
@@ -53,14 +53,19 @@ internal void simulate_game(Input* input, float dt) {
 
 		float player_1_ddp = 0.f; //acceleration
 		// AI bot
-		if (!enemy_is_ai) {
+		if (!enemy_is_ai_easy && !enemy_is_ai_hard) {
 			if (is_down(BUTTON_UP)) player_1_ddp += 2000;
 			if (is_down(BUTTON_DOWN)) player_1_ddp -= 2000;
 		}
-		else {
+		else if (enemy_is_ai_easy){
 			player_1_ddp = (ball_p_y - player_1_p) * 100;
 			if (player_1_ddp > 1300) player_1_ddp = 1300;
 			if (player_1_ddp < -1300 - 2.f) player_1_ddp = -1300;
+		}
+		else if (enemy_is_ai_hard) {
+			player_1_ddp = (ball_p_y - player_1_p) * 199;
+			if (player_1_ddp > 1800) player_1_ddp = 1800;
+			if (player_1_ddp < -1800 - 2.f) player_1_ddp = -1800;
 		}
 
 		float player_2_ddp = 0.f; //acceleration
@@ -129,27 +134,35 @@ internal void simulate_game(Input* input, float dt) {
 
 	}
 	else {
-
-		if (pressed(BUTTON_LEFT) || pressed(BUTTON_RIGHT)) {
-			hot_button = !hot_button; //this lets the user switch the selected mode and see it visually
+		if (pressed(BUTTON_RIGHT)) {
+			hot_button++; //this lets the user switch the selected mode and see it visually
+			if (hot_button >= 3) hot_button = 0;
 		}
 
 		if (pressed(BUTTON_ENTER)) {
 			current_gamemode = GM_GAMEPLAY;
-			enemy_is_ai = hot_button ? 0 : 1;
+			enemy_is_ai_easy = hot_button == 0;
+			enemy_is_ai_hard = hot_button == 2;
 		}
 
 		if (pressed(BUTTON_ESC)) {
 			running = false;
 		}
 
-		if (hot_button == 0) {
-			draw_text("SINGLE PLAYER", -75, -20, .69, 0xff0000);
+		if (hot_button == 1) {
+			draw_text("SP - EASY", -75, -20, .69, 0xd2d7d7);
+			draw_text("SP - HARD", -75, -30, .69, 0xd2d7d7);
+			draw_text("MULTIPLAYER", 12, -20, .69, 0xff0000);
+		}
+		else if (hot_button == 0) {
+			draw_text("SP - EASY", -75, -20, .69, 0xff0000);
+			draw_text("SP - HARD", -75, -30, .69, 0xd2d7d7);
 			draw_text("MULTIPLAYER", 12, -20, .69, 0xd2d7d7);
 		}
-		else {
-			draw_text("SINGLE PLAYER", -75, -20, .69, 0xd2d7d7);
-			draw_text("MULTIPLAYER", 12, -20, .69, 0xff0000);
+		else if (hot_button == 2) {
+			draw_text("SP - EASY", -75, -20, .69, 0xd2d7d7);
+			draw_text("SP - HARD", -75, -30, .69, 0xff0000);
+			draw_text("MULTIPLAYER", 12, -20, .69, 0xd2d7d7);
 		}
 		draw_text("PONG GAME", -55, 35, 1.5, 0xffffff);
 		draw_text("PRESS ESC TO EXIT", -35, 4, .5, 0xffffff);

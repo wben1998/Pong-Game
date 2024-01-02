@@ -284,6 +284,15 @@ const char* letters[][7] = {
 	" 0",
 	"0",
 	"0",
+
+	"    ",
+	"    ",
+	"    ",
+	"0000",
+	"    ",
+	"    ",
+	"    ",
+
 };
 
 internal void draw_text(const char *text, float x, float y, float size, u32 color) {
@@ -295,6 +304,7 @@ internal void draw_text(const char *text, float x, float y, float size, u32 colo
 			const char** letter;
 			if (*text == 47) letter = letters[27];
 			else if (*text == 46) letter = letters[26];
+			else if (*text == 45) letter = letters[28];
 			else letter = letters[*text - 'A'];
 			float original_x = x;
 			for (int i = 0; i < 7; i++) {
