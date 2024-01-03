@@ -4,6 +4,8 @@ This is a pong game written in C++ inspired by [this YouTube playlist](https://w
 
 I am currently still making changes to the game to add new features.
 
+The most recent release of my game is [v1.1.0]([url](https://github.com/wben1998/Pong-Game/releases/tag/v1.1.0)).
+
 # Screenshots of Game
 Game Menu:
 <img width="1280" alt="image" src="https://github.com/wben1998/Pong-Game/assets/133912131/34fef780-349b-4b6e-bf59-1e94c868815b">
